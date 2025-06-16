@@ -1,0 +1,15 @@
+{
+	"files": [],
+	"references": [
+		{ "path": "./tsconfig.app.json" },
+		{ "path": "./tsconfig.node.json" }
+	],
+	"compilerOptions": {
+		"baseUrl": ".",
+		"paths": {
+			"@/*": ["./src/*"]
+		},
+		"forceConsistentCasingInFileNames": true, // 确保文件名大小写一致（跨平台兼容）
+		"strict": true // 启用严格类型检查，减少潜在错误
+	}
+}
