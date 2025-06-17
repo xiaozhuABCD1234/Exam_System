@@ -9,6 +9,8 @@ import jakarta.persistence.Table;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import lombok.Data;
 
@@ -27,5 +29,6 @@ public class Role {
     // 使用@OneToMany注解表示一对多关系
     // mappedBy属性指定了在User实体中对应的字段名
     @OneToMany(mappedBy = "role")
+    @JsonIgnore
     private List<User> users;
 }

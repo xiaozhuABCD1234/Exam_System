@@ -7,6 +7,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
@@ -30,11 +31,11 @@ public class Course {
     private Integer credits; // 学分
 
     @ManyToOne
-    @Column(name = "department_id", nullable = false)
+    @JoinColumn(name = "department_id", nullable = false)
     private Department department; // 课程所属部门实体
 
     @ManyToOne
-    @Column(name = "teacher_id", nullable = false)
+    @JoinColumn(name = "teacher_id", nullable = false)
     private User teacher; // 课程教师实体
 
     @ManyToMany(mappedBy = "courses")

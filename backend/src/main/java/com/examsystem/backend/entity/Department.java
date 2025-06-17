@@ -21,7 +21,6 @@ import jakarta.persistence.Column;
 public class Department {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false, unique = true)
     private Integer id;
 
     @Column(name = "name", nullable = false)
@@ -31,12 +30,16 @@ public class Department {
     private String type; // 部门类型（如学院、专业、班级等）
 
     @ManyToOne
-    @JoinColumn(name = "parent_department_id")
+    @JoinColumn(name = "parent_department_id", unique = false, nullable = true)
     private Department parentDepartment; // 父部门，用于表示层级关系
 
-    @OneToMany(mappedBy = "fatherDepartment")
+    // 一对多关联，指向子部门（关系的反向方，使用mappedBy）
+    @OneToMany(mappedBy = "parentDepartment")
     private List<Department> childDepartments;
 
     @OneToMany(mappedBy = "department", fetch = FetchType.LAZY) // 使用懒加载以提高性能
     private List<User> users; // 关联的用户列表
+
+    @OneToMany(mappedBy = "department", fetch = FetchType.LAZY) // 使用懒加载以提高性能
+    private List<Course> courses; // 关联的课程列表
 }
