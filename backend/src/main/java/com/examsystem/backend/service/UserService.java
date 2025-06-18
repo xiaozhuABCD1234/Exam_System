@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.examsystem.backend.dto.user.UserIn;
@@ -19,6 +20,8 @@ import com.examsystem.backend.utils.DtoUtils;
 
 @Service
 public class UserService implements IUserService {
+
+    private final PasswordEncoder passwordEncoder;
     @Autowired
     private UserRepository userRepository;
 
@@ -28,6 +31,10 @@ public class UserService implements IUserService {
     @Autowired
     private DepartmentRepository departmentRepository;
 
+    UserService(PasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
+    }
+
     @Override
     public UserOut addUser(UserIn dataIn) {
         User user = new User();
@@ -35,7 +42,7 @@ public class UserService implements IUserService {
         // 手动复制字段
         user.setUid(dataIn.getUid());
         user.setUsername(dataIn.getUsername());
-        user.setPassword(dataIn.getPassword());
+        user.setPassword(passwordEncoder.encode(dataIn.getPassword())); // 使用 MD5 加密密码
 
         // 查询 Role 实体
         if (dataIn.getRoleID() == null) {
@@ -95,6 +102,10 @@ public class UserService implements IUserService {
 
         // 更新用户名和密码
         BeanUtils.copyProperties(dataIn, existingUser, "uid", "roleID", "departmentID");
+
+        if (dataIn.getPassword() != null) {
+            existingUser.setPassword(passwordEncoder.encode(dataIn.getPassword()));
+        }
 
         // 查询 Role 实体
         if (dataIn.getRoleID() != null) {
