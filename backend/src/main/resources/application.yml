@@ -1,0 +1,35 @@
+spring:
+  application:
+    name: backend
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/test
+    username: postgres
+    password: 1234
+    driver-class-name: org.postgresql.Driver
+  jackson:
+    serialization:
+      fail-on-empty-beans: false
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+    hibernate:
+      ddl-auto: update
+
+#---------------------
+# 日志配置
+#---------------------
+# 打印执行 SQL 中绑定的参数
+logging:
+  level:
+    org.hibernate.orm.jdbc.bind: "TRACE"
+
+#---------------------
+# JWT 配置
+#---------------------
+jwt:
+  secret: ${JWT_SECRET:wwHIrWSuGq1f44zmynzIzWhgxG+QYKlBrqQRqLcog4M=}
+  expiration: ${JWT_EXPIRATION:86400}

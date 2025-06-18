@@ -46,7 +46,7 @@ public class UserService implements IUserService {
 
         // 查询 Role 实体
         if (dataIn.getRoleID() == null) {
-            dataIn.setRoleID(2); // 默认角色ID为1
+            dataIn.setRoleID(3); // 默认角色ID为3
         }
         Role role = roleRepository.findById(dataIn.getRoleID())
                 .orElseThrow(() -> new IllegalArgumentException("Role not found"));
