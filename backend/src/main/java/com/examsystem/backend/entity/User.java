@@ -27,7 +27,7 @@ public class User {
     private String uid;// 用户的学号/工号，作为业务唯一标识
 
     @Column(name = "username", nullable = false)
-    private String username;// 学生老师的真实姓名
+    private String username;// 学生老师的真实姓名(可以重复)
 
     @Column(name = "password", nullable = false)
     private String password;
