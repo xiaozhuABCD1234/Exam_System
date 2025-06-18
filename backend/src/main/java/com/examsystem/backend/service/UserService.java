@@ -1,5 +1,8 @@
 package com.examsystem.backend.service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,6 +15,7 @@ import com.examsystem.backend.entity.User;
 import com.examsystem.backend.repository.DepartmentRepository;
 import com.examsystem.backend.repository.RoleRepository;
 import com.examsystem.backend.repository.UserRepository;
+import com.examsystem.backend.utils.DtoUtils;
 
 @Service
 public class UserService implements IUserService {
@@ -56,14 +60,7 @@ public class UserService implements IUserService {
         // 保存 User 实体
         User newUser = userRepository.save(user);
 
-        return UserOut.builder()
-                .uid(newUser.getUid())
-                .username(newUser.getUsername())
-                .roleID(newUser.getRole().getId())
-                .roleName(newUser.getRole().getName())
-                .departmentID(newUser.getDepartment() != null ? newUser.getDepartment().getId() : null)
-                .departmentName(newUser.getDepartment() != null ? newUser.getDepartment().getName() : null)
-                .build();
+        return DtoUtils.UserToUserOutput(newUser);
     }
 
     @Override
@@ -73,13 +70,77 @@ public class UserService implements IUserService {
             return null; // 用户不存在
         }
 
-        return UserOut.builder()
-                .uid(user.getUid())
-                .username(user.getUsername())
-                .roleID(user.getRole().getId())
-                .roleName(user.getRole().getName())
-                .departmentID(user.getDepartment() != null ? user.getDepartment().getId() : null)
-                .departmentName(user.getDepartment() != null ? user.getDepartment().getName() : null)
-                .build();
+        return DtoUtils.UserToUserOutput(user);
+    }
+
+    @Override
+    public List<UserOut> getUserByUsername(String username) {
+        List<User> users = userRepository.findByUsername(username);
+        if (users == null) {
+            return null; // 用户不存在
+        }
+        List<UserOut> userOutList = users.stream()
+                .map(user -> DtoUtils.UserToUserOutput(user))
+                .collect(Collectors.toList());
+        return userOutList;
+    }
+
+    @Override
+    public UserOut updateUser(UserIn dataIn) {
+        User existingUser = userRepository.findByUid(dataIn.getUid());
+
+        if (existingUser == null) {
+            return null; // 用户不存在，无法更新
+        }
+
+        // 更新用户名和密码
+        BeanUtils.copyProperties(dataIn, existingUser, "uid", "roleID", "departmentID");
+
+        // 查询 Role 实体
+        if (dataIn.getRoleID() != null) {
+            Role role = roleRepository.findById(dataIn.getRoleID())
+                    .orElseThrow(() -> new IllegalArgumentException("Role not found"));
+            existingUser.setRole(role);
+        }
+
+        // 查询 Department 实体
+        if (dataIn.getDepartmentID() != null) {
+            Department department = departmentRepository.findById(dataIn.getDepartmentID())
+                    .orElseThrow(() -> new IllegalArgumentException(
+                            "Department not found with ID: " + dataIn.getDepartmentID()));
+            existingUser.setDepartment(department);
+        }
+
+        // 保存 User 实体
+        User newUser = userRepository.save(existingUser);
+
+        return DtoUtils.UserToUserOutput(newUser);
+    }
+
+    @Override
+    public boolean deleteUser(String uid) {
+        User user = userRepository.findByUid(uid);
+        if (user == null) {
+            return false; // 用户不存在，无法删除
+        }
+
+        // 删除用户
+        userRepository.delete(user);
+        return true; // 删除成功
+    }
+
+    @Override
+    public List<UserOut> getUsersByRole(Integer id) {
+        List<User> users = userRepository.findByRoleId(id);
+        if (users == null || users.isEmpty()) {
+            return null; // 没有找到该角色的用户
+        }
+
+        // 将 User 实体转换为 UserOut DTO
+        List<UserOut> userOutList = users.stream()
+                .map(user -> DtoUtils.UserToUserOutput(user))
+                .collect(Collectors.toList());
+
+        return userOutList;
     }
 }
