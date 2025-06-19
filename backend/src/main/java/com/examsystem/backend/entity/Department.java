@@ -15,6 +15,9 @@ import java.util.List;
 
 import jakarta.persistence.Column;
 
+/**
+ * 部门实体类，记录部门的基本信息，如部门名称、类型等，并支持层级关系。
+ */
 @Entity
 @Data
 @Table(name = "department")

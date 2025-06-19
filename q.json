@@ -1,0 +1,59 @@
+[
+	{
+		"id": 1,
+		"type": "SINGLE_CHOICE",
+		"content": "使用Java语言编写的源程序保存时的文件扩展名是()",
+		"options": [".class", ".java", ".cpp", ".txt"],
+		"answer": {
+			"correctIndices": [1]
+		}
+	},
+	{
+		"id": 2,
+		"type": "FILL_BLANK",
+		"content": "使用Java语言编写的源程序保存时的文件扩展名是：______",
+		"answer": {
+			"textAnswers": [".java"]
+		}
+	},
+	{
+		"id": 3,
+		"type": "TRUE_FALSE",
+		"content": "Java语言是一种面向对象的编程语言。",
+		"answer": {
+			"isTrue": true
+		}
+	},
+	{
+		"id": 4,
+		"type": "MULTIPLE_CHOICE",
+		"content": "以下哪些是Java语言的关键字？",
+		"options": ["int", "class", "main", "if", "function"],
+		"answer": {
+			"correctIndices": [0, 1, 3]
+		}
+	},
+	{
+		"id": 5,
+		"type": "MULTIPLE_FILL_BLANKS",
+		"content": "在Java中，使用______关键字声明类，使用______关键字声明方法，使用______关键字声明变量。",
+		"answer": {
+			"textAnswers": ["class", "void", "int"]
+		}
+	},
+	{
+		"id": 6,
+		"type": "ORDERING",
+		"content": "将以下Java代码片段按正确的执行顺序排序。",
+		"options": [
+			"{",
+			"public static void main(String[] args)",
+			"System.out.println(\"Hello, World!\");",
+			"public class HelloWorld",
+			"}"
+		],
+		"answer": {
+			"correctOrder": [3, 1, 2, 0, 4]
+		}
+	}
+]

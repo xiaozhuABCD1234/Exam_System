@@ -6,14 +6,14 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import jakarta.persistence.Column;
 import lombok.Data;
+import java.util.List;
 
+/**
+ * 角色实体类，代表系统中的角色，如学生、教师等。
+ */
 @Entity
 @Data
 @Table(name = "role")
