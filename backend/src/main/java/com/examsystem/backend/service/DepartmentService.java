@@ -1,0 +1,98 @@
+package com.examsystem.backend.service;
+
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.examsystem.backend.dto.department.DepartmentIn;
+import com.examsystem.backend.dto.department.DepartmentOut;
+import com.examsystem.backend.entity.Department;
+import com.examsystem.backend.repository.DepartmentRepository;
+
+import java.util.Optional;
+
+@Service
+public class DepartmentService implements IDepartmentService {
+
+    @Autowired
+    private DepartmentRepository departmentRepository;
+
+    @Override
+    public DepartmentOut addDepartment(DepartmentIn dataIn) {
+        Department newDepartment = new Department();
+        BeanUtils.copyProperties(dataIn, newDepartment);
+
+        if (dataIn.getParentID() != null) {
+            Department parentDepartment = departmentRepository.findById(dataIn.getParentID())
+                    .orElseThrow(() -> new IllegalArgumentException("Parent department not found"));
+            newDepartment.setParentDepartment(parentDepartment);
+        } else {
+            newDepartment.setParentDepartment(null);
+        }
+
+        newDepartment = departmentRepository.save(newDepartment);
+
+        DepartmentOut departmentOut = new DepartmentOut();
+        BeanUtils.copyProperties(newDepartment, departmentOut);
+
+        if (newDepartment.getParentDepartment() != null) {
+            departmentOut.setParentID(newDepartment.getParentDepartment().getId());
+        }
+
+        return departmentOut;
+    }
+
+    @Override
+    public boolean deleteDepartment(Integer id) {
+        Optional<Department> departmentOptional = departmentRepository.findById(id);
+        if (departmentOptional.isPresent()) {
+            departmentRepository.deleteById(id);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public DepartmentOut getDepartmentById(Integer id) {
+        Optional<Department> departmentOptional = departmentRepository.findById(id);
+        if (departmentOptional.isPresent()) {
+            Department department = departmentOptional.get();
+            DepartmentOut departmentOut = new DepartmentOut();
+            BeanUtils.copyProperties(department, departmentOut);
+            if (department.getParentDepartment() != null) {
+                departmentOut.setParentID(department.getParentDepartment().getId());
+            }
+            return departmentOut;
+        }
+        return null;
+    }
+
+    @Override
+    public DepartmentOut updateDepartment(DepartmentIn dataIn) {
+        Optional<Department> departmentOptional = departmentRepository.findById(dataIn.getId());
+        if (departmentOptional.isPresent()) {
+            Department department = departmentOptional.get();
+            BeanUtils.copyProperties(dataIn, department, "id");
+
+            if (dataIn.getParentID() != null) {
+                Department parentDepartment = departmentRepository.findById(dataIn.getParentID())
+                        .orElseThrow(() -> new IllegalArgumentException("Parent department not found"));
+                department.setParentDepartment(parentDepartment);
+            } else {
+                department.setParentDepartment(null);
+            }
+
+            department = departmentRepository.save(department);
+
+            DepartmentOut departmentOut = new DepartmentOut();
+            BeanUtils.copyProperties(department, departmentOut);
+
+            if (department.getParentDepartment() != null) {
+                departmentOut.setParentID(department.getParentDepartment().getId());
+            }
+
+            return departmentOut;
+        }
+        return null;
+    }
+}

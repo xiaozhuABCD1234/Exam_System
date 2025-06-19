@@ -43,7 +43,7 @@ public class UserService implements IUserService {
         // 手动复制字段
         user.setUid(dataIn.getUid());
         user.setUsername(dataIn.getUsername());
-        user.setPassword(passwordEncoder.encode(dataIn.getPassword())); 
+        user.setPassword(passwordEncoder.encode(dataIn.getPassword()));
 
         // 查询 Role 实体
         if (dataIn.getRoleID() == null) {
@@ -101,32 +101,37 @@ public class UserService implements IUserService {
             return null; // 用户不存在，无法更新
         }
 
-        // 更新用户名和密码
-        BeanUtils.copyProperties(dataIn, existingUser, "uid", "roleID", "departmentID");
+        // 只更新非空字段
+        if (dataIn.getUsername() != null) {
+            existingUser.setUsername(dataIn.getUsername());
+        }
 
-        if (dataIn.getPassword() != null) {
+        // 只更新非空密码
+        if (dataIn.getPassword() != null && !dataIn.getPassword().isEmpty()) {
             existingUser.setPassword(passwordEncoder.encode(dataIn.getPassword()));
         }
 
-        // 查询 Role 实体
+        // 只更新非空角色ID
         if (dataIn.getRoleID() != null) {
             Role role = roleRepository.findById(dataIn.getRoleID())
                     .orElseThrow(() -> new IllegalArgumentException("Role not found"));
             existingUser.setRole(role);
         }
+        // 否则保持原角色不变
 
-        // 查询 Department 实体
+        // 只更新非空部门ID
         if (dataIn.getDepartmentID() != null) {
             Department department = departmentRepository.findById(dataIn.getDepartmentID())
                     .orElseThrow(() -> new IllegalArgumentException(
                             "Department not found with ID: " + dataIn.getDepartmentID()));
             existingUser.setDepartment(department);
         }
+        // 否则保持原部门不变
 
-        // 保存 User 实体
-        User newUser = userRepository.save(existingUser);
+        // 保存更新后的用户
+        User updatedUser = userRepository.save(existingUser);
 
-        return DtoUtils.UserToUserOutput(newUser);
+        return DtoUtils.UserToUserOutput(updatedUser);
     }
 
     @Override
@@ -170,5 +175,17 @@ public class UserService implements IUserService {
         }
 
         return failedUsers;
+    }
+
+    @Override
+    public List<UserOut> getUsersByDepartmentId(Integer id) {
+        List<User> users = userRepository.findByDepartmentId(id);
+        if (users == null || users.isEmpty()) {
+            return null;
+        }
+        List<UserOut> userOutList = users.stream()
+                .map(user -> DtoUtils.UserToUserOutput(user))
+                .collect(Collectors.toList());
+        return userOutList;
     }
 }

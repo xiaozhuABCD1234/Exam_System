@@ -1,10 +1,7 @@
 package com.examsystem.backend.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
-import java.time.LocalDateTime;
-import java.util.Map;
 
 /**
  * 学生考试关联实体类，记录学生参加考试的详细信息

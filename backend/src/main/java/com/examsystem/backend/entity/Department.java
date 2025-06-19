@@ -4,6 +4,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Table;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -19,8 +20,8 @@ import jakarta.persistence.Column;
  * 部门实体类，记录部门的基本信息，如部门名称、类型等，并支持层级关系。
  */
 @Entity
-@Data
 @Table(name = "department")
+@Data
 public class Department {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

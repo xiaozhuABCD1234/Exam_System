@@ -21,4 +21,6 @@ public interface IUserService {
 
     List<UserIn> addUsers(List<UserIn> students,Integer roleID);
 
+    List<UserOut> getUsersByDepartmentId(Integer id);
+
 }

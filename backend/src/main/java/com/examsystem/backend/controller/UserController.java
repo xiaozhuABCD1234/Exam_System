@@ -45,7 +45,7 @@ public class UserController {
     }
 
     @PutMapping()
-    public ResponseMessage<UserOut> updateUser(@Validated @RequestBody UserIn dataIn) {
+    public ResponseMessage<UserOut> updateUser(@RequestBody UserIn dataIn) {
         UserOut updatedUser = userService.updateUser(dataIn);
         if (updatedUser == null) {
             return ResponseMessage.error(502, "更新用户失败");
