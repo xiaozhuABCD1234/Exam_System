@@ -1,5 +1,6 @@
 package com.examsystem.backend.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -42,7 +43,7 @@ public class UserService implements IUserService {
         // 手动复制字段
         user.setUid(dataIn.getUid());
         user.setUsername(dataIn.getUsername());
-        user.setPassword(passwordEncoder.encode(dataIn.getPassword())); // 使用 MD5 加密密码
+        user.setPassword(passwordEncoder.encode(dataIn.getPassword())); 
 
         // 查询 Role 实体
         if (dataIn.getRoleID() == null) {
@@ -153,5 +154,21 @@ public class UserService implements IUserService {
                 .collect(Collectors.toList());
 
         return userOutList;
+    }
+
+    @Override
+    public List<UserIn> addUsers(List<UserIn> students, Integer roleID) {
+        List<UserIn> failedUsers = new ArrayList<>();
+
+        for (UserIn student : students) {
+            try {
+                student.setRoleID(roleID); // 默认角色ID为3
+                addUser(student);
+            } catch (Exception e) {
+                failedUsers.add(student);
+            }
+        }
+
+        return failedUsers;
     }
 }

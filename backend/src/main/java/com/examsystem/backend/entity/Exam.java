@@ -37,4 +37,8 @@ public class Exam {
 
     @OneToMany(mappedBy = "exam")
     private Set<ExamQuestion> examQuestions;
+
+    @ManyToOne
+    @JoinColumn(name = "course_id", referencedColumnName = "id")
+    private Course course;
 }

@@ -19,4 +19,6 @@ public interface IUserService {
 
     List<UserOut> getUsersByRole(Integer id);
 
+    List<UserIn> addUsers(List<UserIn> students,Integer roleID);
+
 }

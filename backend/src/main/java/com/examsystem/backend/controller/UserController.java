@@ -1,8 +1,5 @@
 package com.examsystem.backend.controller;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.examsystem.backend.dto.user.UserIn;
 import com.examsystem.backend.dto.user.UserOut;
 import com.examsystem.backend.pojo.ResponseMessage;
@@ -63,5 +60,23 @@ public class UserController {
             return ResponseMessage.error(502, "删除用户失败");
         }
         return ResponseMessage.success("用户删除成功");
+    }
+
+    @PostMapping("students")
+    public ResponseMessage<?> createStudents(@Validated @RequestBody List<UserIn> students) {
+        List<UserIn> failedStudents = userService.addUsers(students, 3);
+        if (!failedStudents.isEmpty()) {
+            return new ResponseMessage<>(502, "部分学生创建失败", failedStudents);
+        }
+        return ResponseMessage.success("学生创建成功");
+    }
+
+    @PostMapping("teachers")
+    public ResponseMessage<?> createTeachers(@Validated @RequestBody List<UserIn> teachers) {
+        List<UserIn> failedTeachers = userService.addUsers(teachers, 2);
+        if (!failedTeachers.isEmpty()) {
+            return new ResponseMessage<>(502, "部分教师创建失败", failedTeachers);
+        }
+        return ResponseMessage.success("教师创建成功");
     }
 }

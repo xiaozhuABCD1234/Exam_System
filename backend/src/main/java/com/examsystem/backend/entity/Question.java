@@ -67,14 +67,6 @@ public class Question {
         EASY, MEDIUM, HARD
     }
 
-    @Embeddable
-    @Data
-    public static class Answer {
-        private List<Integer> correctIndices; // 选择题
-        private List<String> textAnswers; // 填空题
-        private Boolean isTrue; // 判断题
-        private List<Integer> correctOrder; // 排序题
-    }
 
     public enum QuestionType {
         SINGLE_CHOICE,
