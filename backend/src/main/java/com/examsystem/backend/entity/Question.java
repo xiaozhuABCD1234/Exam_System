@@ -9,6 +9,9 @@ import org.hibernate.type.SqlTypes;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
+import com.examsystem.backend.pojo.DifficultyLevel;
+import com.examsystem.backend.pojo.QuestionType;
+
 // import com.examsystem.backend.pojo.QuestionType;
 
 import jakarta.persistence.*;
@@ -20,6 +23,7 @@ import lombok.*;
 @Entity
 @Data
 @Table(name = "questions")
+@EqualsAndHashCode(of = "id") // 仅使用主键字段生成 equals 和 hashCode 方法
 public class Question {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,10 +31,22 @@ public class Question {
     private Integer id;
 
     @Column(name = "content", nullable = false)
-    private String content; // 题目内容
+    private String content;
 
     @Column(name = "difficulty", nullable = true)
-    private DifficultyLevel difficulty; // 题目难度，例如：简单、中等、困难
+    private DifficultyLevel difficulty;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = true, length = 50)
+    private QuestionType type;
+
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(columnDefinition = "jsonb", nullable = true)
+    private String options;
+
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(columnDefinition = "jsonb", nullable = false)
+    private String answer;
 
     @Column(name = "created_at", nullable = false)
     @CreatedDate
@@ -51,30 +67,14 @@ public class Question {
     @OneToMany(mappedBy = "question", cascade = CascadeType.ALL)
     private Set<QuestionTag> questionTags;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 50)
-    private QuestionType type; // 使用枚举类型
-
-    @JdbcTypeCode(SqlTypes.JSON)
-    @Column(columnDefinition = "jsonb")
-    private List<String> options;
-
-    @JdbcTypeCode(SqlTypes.JSON)
-    @Column(columnDefinition = "jsonb")
-    private Answer answer;
-
-    public enum DifficultyLevel {
-        EASY, MEDIUM, HARD
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now(); // 在插入数据之前设置当前时间
+        updatedAt = LocalDateTime.now(); // 在插入数据之前设置当前时间
     }
 
-
-    public enum QuestionType {
-        SINGLE_CHOICE,
-        MULTIPLE_CHOICE,
-        FILL_BLANK,
-        TRUE_FALSE,
-        MULTIPLE_FILL_BLANKS,
-        ORDERING,
-        MATCHING // 可扩展匹配题
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = LocalDateTime.now(); // 在更新数据之前设置当前时间
     }
 }

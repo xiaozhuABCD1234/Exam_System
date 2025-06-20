@@ -8,13 +8,15 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * 问题标签关联实体类，用于关联问题和标签。
  */
 @Entity
-@Table(name = "question_tags")
 @Data
+@Table(name = "question_tags")
+@EqualsAndHashCode(of = "id") // 仅使用主键字段生成 equals 和 hashCode 方法
 public class QuestionTag {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

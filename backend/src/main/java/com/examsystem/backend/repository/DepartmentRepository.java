@@ -1,5 +1,7 @@
 package com.examsystem.backend.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -12,5 +14,6 @@ public interface DepartmentRepository extends JpaRepository<Department, Integer>
     // Department findByName(String name);
 
     // 可以添加其他自定义查询方法
+    List<Department> findByParentDepartmentId(Integer parentId);
 
 }

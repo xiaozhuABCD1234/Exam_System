@@ -9,6 +9,8 @@ import com.examsystem.backend.dto.department.DepartmentOut;
 import com.examsystem.backend.entity.Department;
 import com.examsystem.backend.repository.DepartmentRepository;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -59,12 +61,47 @@ public class DepartmentService implements IDepartmentService {
             Department department = departmentOptional.get();
             DepartmentOut departmentOut = new DepartmentOut();
             BeanUtils.copyProperties(department, departmentOut);
+
+            // 设置父部门ID
             if (department.getParentDepartment() != null) {
                 departmentOut.setParentID(department.getParentDepartment().getId());
             }
+
+            // 查询并设置子部门
+            List<Department> children = departmentRepository.findByParentDepartmentId(id);
+            if (children != null && !children.isEmpty()) {
+                List<DepartmentOut> childrenOut = new ArrayList<>();
+                for (Department child : children) {
+                    DepartmentOut childOut = new DepartmentOut();
+                    BeanUtils.copyProperties(child, childOut);
+                    // 递归设置子部门的子部门
+                    childOut.setChildren(getChildrenDepartments(child.getId()));
+                    childrenOut.add(childOut);
+                }
+                departmentOut.setChildren(childrenOut);
+            }
+
             return departmentOut;
         }
         return null;
+    }
+
+    // 递归获取子部门
+    private List<DepartmentOut> getChildrenDepartments(Integer parentId) {
+        List<Department> children = departmentRepository.findByParentDepartmentId(parentId);
+        if (children == null || children.isEmpty()) {
+            return null;
+        }
+
+        List<DepartmentOut> childrenOut = new ArrayList<>();
+        for (Department child : children) {
+            DepartmentOut childOut = new DepartmentOut();
+            BeanUtils.copyProperties(child, childOut);
+            // 递归设置子部门的子部门
+            childOut.setChildren(getChildrenDepartments(child.getId()));
+            childrenOut.add(childOut);
+        }
+        return childrenOut;
     }
 
     @Override
