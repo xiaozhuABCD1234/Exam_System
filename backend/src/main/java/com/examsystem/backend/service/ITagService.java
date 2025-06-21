@@ -1,6 +1,7 @@
 package com.examsystem.backend.service;
 
 import com.examsystem.backend.dto.TagDto;
+import com.examsystem.backend.dto.question.QuestionOut;
 
 import java.util.List;
 
@@ -15,4 +16,6 @@ public interface ITagService {
     List<TagDto> getAllTags();
 
     TagDto updateTag(TagDto tag);
+
+    List<QuestionOut> getQuestionsByTagId(Integer tagId);
 }

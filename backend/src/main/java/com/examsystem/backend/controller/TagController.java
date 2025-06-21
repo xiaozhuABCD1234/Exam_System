@@ -3,6 +3,7 @@ package com.examsystem.backend.controller;
 import org.springframework.web.bind.annotation.*;
 
 import com.examsystem.backend.dto.TagDto;
+import com.examsystem.backend.dto.question.QuestionOut;
 import com.examsystem.backend.pojo.ResponseMessage;
 import com.examsystem.backend.service.ITagService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,5 +61,14 @@ public class TagController {
             return ResponseMessage.error(502, "更新标签失败");
         }
         return ResponseMessage.success(updatedTag);
+    }
+
+    @GetMapping("/{id}/questions")
+    public ResponseMessage<List<QuestionOut>> getQuestionsByTagId(@PathVariable Integer id) {
+        List<QuestionOut> questions = tagService.getQuestionsByTagId(id);
+        if (questions == null || questions.isEmpty()) {
+            return ResponseMessage.error(404, "未找到该标签关联的题目");
+        }
+        return ResponseMessage.success(questions);
     }
 }

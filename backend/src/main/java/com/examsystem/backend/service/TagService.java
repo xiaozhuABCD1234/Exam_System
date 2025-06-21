@@ -1,8 +1,12 @@
 package com.examsystem.backend.service;
 
 import com.examsystem.backend.dto.TagDto;
+import com.examsystem.backend.dto.question.QuestionOut;
+import com.examsystem.backend.entity.Question;
 import com.examsystem.backend.entity.Tag;
 import com.examsystem.backend.repository.TagRepository;
+import com.examsystem.backend.utils.DtoUtils;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class TagService implements ITagService {
@@ -74,5 +79,13 @@ public class TagService implements ITagService {
             return tagOut;
         }
         return null;
+    }
+
+    @Override
+    public List<QuestionOut> getQuestionsByTagId(Integer tagId) {
+        List<Question> questions = tagRepository.findQuestionsByTagId(tagId);
+        return questions.stream()
+                .map(DtoUtils::questionToQuestionOut)
+                .collect(Collectors.toList());
     }
 }
