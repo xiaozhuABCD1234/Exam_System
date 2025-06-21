@@ -1,7 +1,6 @@
 package com.examsystem.backend.service;
 
-import com.examsystem.backend.dto.tag.TagIn;
-import com.examsystem.backend.dto.tag.TagOut;
+import com.examsystem.backend.dto.TagDto;
 import com.examsystem.backend.entity.Tag;
 import com.examsystem.backend.repository.TagRepository;
 import org.springframework.beans.BeanUtils;
@@ -19,11 +18,11 @@ public class TagService implements ITagService {
     private TagRepository tagRepository;
 
     @Override
-    public TagOut addTag(TagIn tag) {
+    public TagDto addTag(TagDto tag) {
         Tag newTag = new Tag();
         BeanUtils.copyProperties(tag, newTag);
         newTag = tagRepository.save(newTag);
-        TagOut tagOut = new TagOut();
+        TagDto tagOut = new TagDto();
         BeanUtils.copyProperties(newTag, tagOut);
         return tagOut;
     }
@@ -38,11 +37,11 @@ public class TagService implements ITagService {
     }
 
     @Override
-    public TagOut getTagById(Integer id) {
+    public TagDto getTagById(Integer id) {
         Optional<Tag> tagOptional = tagRepository.findById(id);
         if (tagOptional.isPresent()) {
             Tag tag = tagOptional.get();
-            TagOut tagOut = new TagOut();
+            TagDto tagOut = new TagDto();
             BeanUtils.copyProperties(tag, tagOut);
             return tagOut;
         }
@@ -50,11 +49,11 @@ public class TagService implements ITagService {
     }
 
     @Override
-    public List<TagOut> getAllTags() {
+    public List<TagDto> getAllTags() {
         List<Tag> tags = tagRepository.findAll();
-        List<TagOut> tagOuts = new ArrayList<>();
+        List<TagDto> tagOuts = new ArrayList<>();
         for (Tag tag : tags) {
-            TagOut tagOut = new TagOut();
+            TagDto tagOut = new TagDto();
             BeanUtils.copyProperties(tag, tagOut);
             tagOuts.add(tagOut);
         }
@@ -62,15 +61,15 @@ public class TagService implements ITagService {
     }
 
     @Override
-    public TagOut updateTag(Integer id, TagIn tag) {
-        Optional<Tag> tagOptional = tagRepository.findById(id);
+    public TagDto updateTag(TagDto tag) {
+        Optional<Tag> tagOptional = tagRepository.findById(tag.getId());
         if (tagOptional.isPresent()) {
             Tag existingTag = tagOptional.get();
             if (tag.getName() != null) {
                 existingTag.setName(tag.getName());
             }
             existingTag = tagRepository.save(existingTag);
-            TagOut tagOut = new TagOut();
+            TagDto tagOut = new TagDto();
             BeanUtils.copyProperties(existingTag, tagOut);
             return tagOut;
         }

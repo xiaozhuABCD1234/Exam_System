@@ -1,19 +1,18 @@
 package com.examsystem.backend.service;
 
-import com.examsystem.backend.dto.tag.TagIn;
-import com.examsystem.backend.dto.tag.TagOut;
+import com.examsystem.backend.dto.TagDto;
 
 import java.util.List;
 
 public interface ITagService {
 
-    TagOut addTag(TagIn tag);
+    TagDto addTag(TagDto tag);
 
     boolean deleteTag(Integer id);
 
-    TagOut getTagById(Integer id);
+    TagDto getTagById(Integer id);
 
-    List<TagOut> getAllTags();
+    List<TagDto> getAllTags();
 
-    TagOut updateTag(Integer id, TagIn tag);
+    TagDto updateTag(TagDto tag);
 }

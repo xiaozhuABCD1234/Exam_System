@@ -2,7 +2,6 @@ package com.examsystem.backend.service;
 
 import com.examsystem.backend.dto.question.QuestionIn;
 import com.examsystem.backend.dto.question.QuestionOut;
-import com.examsystem.backend.entity.Question;
 import java.util.List;
 
 public interface IQuestionService {

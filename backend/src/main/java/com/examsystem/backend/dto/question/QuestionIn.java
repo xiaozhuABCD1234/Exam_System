@@ -10,6 +10,7 @@ import lombok.Data;
 
 @Data
 public class QuestionIn {
+    private Integer id;
     @NotBlank(message = "题目内容不能为空")
     private String content; // 题目内容
     private DifficultyLevel difficulty; // 题目难度，例如：简单、中等、困难

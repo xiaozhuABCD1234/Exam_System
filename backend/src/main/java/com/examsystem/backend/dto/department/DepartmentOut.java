@@ -2,7 +2,6 @@ package com.examsystem.backend.dto.department;
 
 import java.util.List;
 
-import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 @Data

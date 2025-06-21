@@ -1,8 +1,7 @@
 package com.examsystem.backend.entity;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;

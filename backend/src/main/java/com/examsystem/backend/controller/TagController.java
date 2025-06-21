@@ -1,11 +1,12 @@
 package com.examsystem.backend.controller;
 
 import org.springframework.web.bind.annotation.*;
-import com.examsystem.backend.dto.tag.TagIn;
-import com.examsystem.backend.dto.tag.TagOut;
+
+import com.examsystem.backend.dto.TagDto;
 import com.examsystem.backend.pojo.ResponseMessage;
 import com.examsystem.backend.service.ITagService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 
 import java.util.List;
 
@@ -17,8 +18,8 @@ public class TagController {
     private ITagService tagService;
 
     @PostMapping()
-    public ResponseMessage<TagOut> addTag(@RequestBody TagIn tag) {
-        TagOut newTag = tagService.addTag(tag);
+    public ResponseMessage<TagDto> addTag(@Validated @RequestBody TagDto tag) {
+        TagDto newTag = tagService.addTag(tag);
         if (newTag == null) {
             return ResponseMessage.error(502, "创建标签失败");
         }
@@ -35,8 +36,8 @@ public class TagController {
     }
 
     @GetMapping("/{id}")
-    public ResponseMessage<TagOut> getTagById(@PathVariable Integer id) {
-        TagOut tag = tagService.getTagById(id);
+    public ResponseMessage<TagDto> getTagById(@PathVariable Integer id) {
+        TagDto tag = tagService.getTagById(id);
         if (tag == null) {
             return ResponseMessage.error(404, "标签未找到");
         }
@@ -44,17 +45,17 @@ public class TagController {
     }
 
     @GetMapping()
-    public ResponseMessage<List<TagOut>> getAllTags() {
-        List<TagOut> tags = tagService.getAllTags();
+    public ResponseMessage<List<TagDto>> getAllTags() {
+        List<TagDto> tags = tagService.getAllTags();
         if (tags == null || tags.isEmpty()) {
             return ResponseMessage.error(404, "未找到任何标签");
         }
         return ResponseMessage.success(tags);
     }
 
-    @PutMapping("/{id}")
-    public ResponseMessage<TagOut> updateTag(@PathVariable Integer id, @RequestBody TagIn tag) {
-        TagOut updatedTag = tagService.updateTag(id, tag);
+    @PutMapping()
+    public ResponseMessage<TagDto> updateTag(@Validated @RequestBody TagDto tag) {
+        TagDto updatedTag = tagService.updateTag(tag);
         if (updatedTag == null) {
             return ResponseMessage.error(502, "更新标签失败");
         }
